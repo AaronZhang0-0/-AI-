@@ -12,7 +12,9 @@ import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import AiAssistantDashboard from './components/AiAssistantDashboard';
 import StatusCategoryPanel from './components/StatusCategoryPanel';
-import TaskTimelineAndRisks from './components/TaskTimelineAndRisks';
+import SafetyStatusBanner from './components/SafetyStatusBanner';
+import ThreeUrgentMatters from './components/ThreeUrgentMatters';
+import AiTaskFlow from './components/AiTaskFlow';
 import TodoTaskList from './components/TodoTaskList';
 import AiChatbotDrawer from './components/AiChatbotDrawer';
 import EventDetailsModal from './components/EventDetailsModal';
@@ -67,9 +69,21 @@ export default function App() {
     triggerToast("即将进入「事件处置中心」...", 'info');
   };
 
-  const handleFocusRisks = () => {
-    // Jump scroll & glow high-risk item ("REV-20260602-01")
+  const handleFocusThreeMatters = () => {
+    // Scroll and focus
     setShouldHighlightRiskId("REV-20260602-01");
+  };
+
+  const handleFocusPendingEvent = () => {
+    const match = riskEvents.find(e => e.id === "REV-20260602-03");
+    if (match) {
+      setSelectedEvent(match);
+      triggerToast("🤖 已为您快速打开配电区「危险区域闯入」人工确认核实中心！");
+    }
+  };
+
+  const handleInterventionFromHome = (eventId: string) => {
+    handleInterventionSuccess(eventId);
   };
 
   // AI Intervention path callback
@@ -82,7 +96,7 @@ export default function App() {
           status: '干预中',
           details: {
             ...evt.details,
-            conclusion: `【干预正在派发】已成功向二采区A3钢桁发布针对该作业工位（ZH-091）的语音定向广播驱准指令已完成。临近现场安全监督员已经获受飞星警报！\n\n(原识别内容：${evt.details.conclusion})`
+            conclusion: `【现场语音已送达】已成功向二采区A3部位现场定向语音喇叭播发安全告知。临近现场安全员已收到待核告警工单，正在呼查人员纠正！\n\n(原识别内容：${evt.details.conclusion})`
           }
         };
       }
@@ -95,13 +109,13 @@ export default function App() {
     const newTimelineItem: TimelineItem = {
       id: newId,
       time: newTime,
-      action: `[干预触发] 极速启动对「${riskEvents.find(e => e.id === eventId)?.event}」的系统广播并短信飞星`,
+      action: `[现场干预] 已向现场安全员发送核查待办，并针对「${riskEvents.find(e => e.id === eventId)?.event}」触发语音播报提醒`,
       status: "干预中",
       statusType: "active"
     };
     
     setTimelineItems(prev => [newTimelineItem, ...prev]);
-    triggerToast("🤖 小邦已全域执行AI干预广播！系统指标看板以及时效事件流均做出实时跟进。", 'success');
+    triggerToast("🤖 安小邦已触发安全纠违语音警示及短信推送！现场干预任务现已发送至当班安全代表。", 'success');
   };
 
   // Complete Todo Task Checklist callback
@@ -197,49 +211,64 @@ export default function App() {
                 AI安全办公室
               </h2>
               <p className="text-[11px] text-slate-500 mt-0.5 tracking-wide">
-                当前看板由 AI 督导小安实时保障 128 个全域特种监控场景，并在前台匹配联动干预策略。
+                当前看板由 AI 督导安小邦进行实时监控，前台自动联动现场纠违语音和告警流转。
               </p>
             </div>
             <div className="flex items-center gap-2 text-xs font-mono font-medium text-slate-500">
-              <span>今日主班值勤: 张安全</span>
+              <span>今日值守安全员: 张安全</span>
               <span className="text-slate-300">|</span>
               <span className="text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full font-bold flex items-center gap-1 border border-blue-100">
                 <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-ping" />
-                系统在线
+                系统在线值班中
               </span>
             </div>
           </div>
 
-          {/* Core Module 3: 安小邦智能工作区 */}
-          <AiAssistantDashboard 
-            onFocusRisks={handleFocusRisks}
-            onOpenReport={handleOpenReport}
-            onOpenDisposalCenter={handleOpenDisposalCenter}
+          {/* Module 1: 今日安全态势条 */}
+          <SafetyStatusBanner 
             toast={(m) => triggerToast(m, 'info')}
           />
 
-          {/* Core Module 4: Active AI status categories */}
+          {/* Module 2: 安小邦智能工作区 */}
+          <AiAssistantDashboard 
+            onFocusThreeMatters={handleFocusThreeMatters}
+            onFocusPendingEvent={handleFocusPendingEvent}
+            onOpenReport={handleOpenReport}
+            toast={(m) => triggerToast(m, 'info')}
+          />
+
+          {/* Module 3: AI工作席位 */}
           <StatusCategoryPanel 
             toast={(m) => triggerToast(m, 'info')}
           />
 
-          {/* Core Module 5: Timeline Task Stream & Real Risks Table */}
-          <TaskTimelineAndRisks 
-            timelineItems={timelineItems}
+          {/* Module 4: 今日必须处理的3件事 */}
+          <ThreeUrgentMatters 
             riskEvents={filteredRiskEvents}
-            selectedEventId={selectedEvent?.id || null}
             onSelectEvent={handleSelectRiskRow}
+            onExecuteIntervention={handleInterventionFromHome}
             shouldHighlightRiskId={shouldHighlightRiskId}
             resetHighlight={() => setShouldHighlightRiskId(null)}
             toast={(m) => triggerToast(m, 'info')}
           />
 
-          {/* Core Module 6: Bottom wide table "待办任务" */}
-          <TodoTaskList 
-            todoTasks={filteredTodoTasks}
-            onOpenTodoTask={(todo) => setSelectedTodo(todo)}
-            toast={(m) => triggerToast(m, 'info')}
-          />
+          {/* Module 5: AI 任务流 & 待办任务 */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            <div className="lg:col-span-5">
+              <AiTaskFlow 
+                timelineItems={timelineItems}
+                toast={(m) => triggerToast(m, 'info')}
+              />
+            </div>
+            
+            <div className="lg:col-span-7">
+              <TodoTaskList 
+                todoTasks={filteredTodoTasks}
+                onOpenTodoTask={(todo) => setSelectedTodo(todo)}
+                toast={(m) => triggerToast(m, 'info')}
+              />
+            </div>
+          </div>
 
         </main>
       </div>

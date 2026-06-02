@@ -46,13 +46,13 @@ export default function EventDetailsModal({
     if (interventionState !== 'idle') return;
     
     setInterventionState('executing');
-    toast("🤖 安小邦正在呼叫执行引擎：启动全生命周期防滑坠干预闭环...");
+    toast("🤖 安小邦通报现场：启动不安全行为语音播发并派发核查工单...");
 
     setTimeout(() => {
       setInterventionState('success');
-      setConfirmViolation(true); // Auto check human authorization as assistant helps
+      // AI cannot substitute human checks: confirmViolation remains manual (unchecked)
       onInterventionSuccess(event.id);
-      toast("🔥 语音/短号广播推送已全部下发！策略链正在实时响应！");
+      toast("📢 语音播报及告警通知推送已全部下发，请现场人员配合复核并反馈状态！");
     }, 1500);
   };
 
@@ -268,7 +268,7 @@ export default function EventDetailsModal({
                 <div className="flex items-center justify-between text-slate-300">
                   <div className="flex items-center gap-2">
                     <MessageSquare className="w-4 h-4 text-sky-400 animate-pulse" />
-                    <span>推送实时待核警告至安全监管代表张安全短号</span>
+                    <span>推送待核告警工单至安全监管代表张安全终端手机</span>
                   </div>
                   <span className="text-emerald-400 text-[11px] font-bold">● 已送达 (09:12:48)</span>
                 </div>
@@ -277,7 +277,7 @@ export default function EventDetailsModal({
                 <div className="flex items-center justify-between text-slate-300">
                   <div className="flex items-center gap-2">
                     <FileSpreadsheet className="w-4 h-4 text-purple-400" />
-                    <span>创建待办阻断卡推入班组长微信小程序</span>
+                    <span>创建核实待办任务并派发至带班安全监护人员</span>
                   </div>
                   <span className="text-emerald-400 text-[11px] font-bold">● 待办中</span>
                 </div>
@@ -333,7 +333,7 @@ export default function EventDetailsModal({
               {interventionState === 'success' && (
                 <>
                   <CheckCircle2 className="w-4 h-4 text-emerald-450" />
-                  干预已全域触发并流转
+                  干预工作流已启动
                 </>
               )}
             </button>
