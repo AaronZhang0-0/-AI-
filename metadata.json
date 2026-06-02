@@ -1,0 +1,6 @@
+{
+  "name": "不安全行为识别和干预AI智能体系统",
+  "description": "基于AI的多端主动识别、研判、干预和闭环处理的安全行为智能管理系统，内置安小邦AI安全助手。",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
