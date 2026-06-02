@@ -172,6 +172,7 @@ export default function App() {
             onFocusThreeMatters={handleFocusThreeMatters}
             onFocusPendingEvent={handleFocusPendingEvent}
             onOpenReport={handleOpenReport}
+            onOpenChat={() => setIsChatOpen(true)}
           />
 
           {/* Module 3: 今日必须处理的3件事 */}
