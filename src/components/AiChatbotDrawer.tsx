@@ -37,7 +37,7 @@ export default function AiChatbotDrawer({
     {
       id: "init-m1",
       sender: "ai",
-      text: "您好，我是您的AI安全督导助手**安小邦**。我正在实时监听128路生产监控视频流并协同匹配安全制度。您随时可以询问我厂区实时风险、特定工位、或请求帮您处理闭环事务！",
+      text: "您好，我是您的AI安全督导助手**安维斯 Anvis**。我正在实时监听128路生产监控视频流并协同匹配安全制度。您随时可以询问我厂区实时风险、特定工位、或请求帮您处理闭环事务！",
       timestamp: "09:20"
     }
   ]);
@@ -75,7 +75,7 @@ export default function AiChatbotDrawer({
 
     // 2. Simulate AI delay
     setTimeout(() => {
-      let replyText = "抱歉小邦刚才没有听清，建议您向我咨询「今日高风险」等预设厂区核心安全数据。";
+      let replyText = "抱歉安维斯刚才没有听清，建议您向我咨询「今日高风险」等预设厂区核心安全数据。";
       
       // Lookup matches in preset questions
       const matchKey = Object.keys(PRESET_CHAT_ANSWERS).find(k => k.includes(text) || text.includes(k));
@@ -87,7 +87,7 @@ export default function AiChatbotDrawer({
         if (lower.includes("高架") || lower.includes("高处") || lower.includes("安全带") || lower.includes("坠落")) {
           replyText = "发现您对高处作业感兴趣。今日 **09:12** 在二采区曾触发「高处作业未系安全带」紧急事件。系统已调动二采区音柱全智能督导喊麦。需要为您**定位并打开该事件的研究面板**吗？";
         } else if (lower.includes("你好") || lower.includes("在吗") || lower.includes("你好呀")) {
-          replyText = "您好！我是安小邦，您的智能安全助手。很高兴为您服务。请问今天有什么安全检查任务需要我辅助判定或生成汇报吗？";
+          replyText = "您好！我是安维斯 Anvis，您的智能安全助手。很高兴为您服务。请问今天有什么安全检查任务需要我辅助判定或生成汇报吗？";
         } else if (lower.includes("日报") || lower.includes("简报") || lower.includes("报告")) {
           replyText = PRESET_CHAT_ANSWERS["帮我生成今日安全日报。"].reply;
         } else if (lower.includes("配电") || lower.includes("闯入") || lower.includes("配电房")) {
@@ -120,7 +120,7 @@ export default function AiChatbotDrawer({
       {
         id: "init-m1",
         sender: "ai",
-        text: "聊天历史记录已清理。我是小邦，继续为您常驻在岗安全排查和策略协同！",
+        text: "聊天历史记录已清理。我是安维斯，继续为您常驻在岗安全排查和策略协同！",
         timestamp: new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })
       }
     ]);
@@ -135,7 +135,7 @@ export default function AiChatbotDrawer({
         className="fixed bottom-8 right-8 z-40 w-16 h-16 bg-blue-600 rounded-full shadow-2xl flex flex-col items-center justify-center text-white border-4 border-white hover:scale-105 active:scale-95 transition-all cursor-pointer group"
       >
         <div className="text-xl group-hover:animate-bounce">🤖</div>
-        <div className="text-[10px] font-bold font-sans">安小邦</div>
+        <div className="text-[10px] font-bold font-sans">安维斯</div>
       </button>
 
       {/* 2. Side Dialog Drawer Panel */}
@@ -149,7 +149,7 @@ export default function AiChatbotDrawer({
                 <Sparkles className="w-4.5 h-4.5 text-cyan-400 animate-pulse" />
               </div>
               <div className="text-left">
-                <div className="text-xs font-bold font-sans">安小邦智能安全督导</div>
+                <div className="text-xs font-bold font-sans">安维斯智能安全督导</div>
                 <div className="text-[9px] text-cyan-305 font-mono tracking-wider">AI AGENT ONLINE COM</div>
               </div>
             </div>

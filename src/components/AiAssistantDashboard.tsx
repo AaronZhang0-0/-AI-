@@ -4,24 +4,28 @@
  */
 
 import React, { useState } from 'react';
-import { ShieldAlert, Eye, Cpu, Send, Sparkles, CheckCircle2, Play, Settings, ShieldCheck, HelpCircle } from 'lucide-react';
+import { Send, Sparkles, ShieldCheck, Activity, RefreshCw, Bell, FileText, CheckCircle } from 'lucide-react';
 
 interface AiAssistantProps {
   onFocusThreeMatters: () => void;
   onFocusPendingEvent: () => void;
   onOpenReport: () => void;
   onOpenChat?: () => void;
+  onMatchPolicy?: () => void;
+  toast: (msg: string, type?: 'info' | 'success') => void;
 }
 
 export default function AiAssistantDashboard({ 
   onFocusThreeMatters, 
   onFocusPendingEvent, 
   onOpenReport,
-  onOpenChat
+  onOpenChat,
+  onMatchPolicy,
+  toast
 }: AiAssistantProps) {
   const [query, setQuery] = useState('');
   const [conversation, setConversation] = useState<{ role: 'ai' | 'user'; text: string }[]>([
-    { role: 'ai', text: '您好，我是安全智能体安小邦。今日自动化监控已常驻就绪，您可以向下达指派命令、或查阅当前待办。' }
+    { role: 'ai', text: '您好，我是安全守护智能体安维斯 Anvis。当前AI视频分析、高风险提醒、自动督办正常驻后台值守。您可以随时下达临时管理指令，如查询特定事件或编制简报等。' }
   ]);
   const [isAnswering, setIsAnswering] = useState(false);
 
@@ -39,151 +43,170 @@ export default function AiAssistantDashboard({
       const norm = cmdText.toLowerCase();
 
       if (norm.includes('高风险') || norm.includes('风险') || norm.includes('高危')) {
-        reply = '🔍 分析报告：今天系统共捕获到 5 起疑似风险事件，其中二采区「高处作业未系安全带」（09:12）最为紧急。系统已通过现场声柱对其触发广播喊话。建议点击【查看风险】一键快速锁定。';
-        // Auto trigger highlight scroll behavior
+        reply = '🔍 已为您筛选并定位今天发生的 3 类关键不合规事件。推荐优先确认最上方「二采区高处作业未系安全带」（高风险）并予以人工确认。';
         onFocusThreeMatters();
       } else if (norm.includes('日报') || norm.includes('报告') || norm.includes('生成日报')) {
-        reply = '📊 已收到指令，正在实时抓取截止当前的 32 起厂区偏失巡查画面，正在调起「AI 智能安全简报分析」仪表板... 请查看弹出的日报分析。';
+        reply = '📊 已收到指令，正在一键抓取并总结截止今日当前 2026/06/02 的全部 32 起厂区偏失巡查画面... 智能安全日报正在为您生成就绪，请阅读弹窗简牍。';
         onOpenReport();
-      } else if (norm.includes('确认') || norm.includes('核查') || norm.includes('待处理') || norm.includes('待确认')) {
-        reply = '💡 提示：目前有 8 起安全偏失待审核，重点是配电区「越线闯入区域监控」。已为您启动并核对带班值修员现场反馈，建议点击【去处理】一键调阅详情。';
-        onFocusPendingEvent();
-      } else if (norm.includes('策略') || norm.includes('自动化') || norm.includes('规则')) {
-        reply = '⚡ 您当前运行着 3 条全自动安全防御规则：包括“每秒60帧视频源智能分析”、“违规高分贝高空定向语音喊麦”、以及“多端工单同步派发提醒”。一切运转正常，防护率 100%。';
+      } else if (norm.includes('催办') || norm.includes('超期') || norm.includes('待处理')) {
+        reply = '⚡ 已针对超期未闭合的 2 起作业事件（主要为二采区与破碎通道超期偏失项），自动向对应两名当班班组责任人推送了短信催办工单并致电提醒。';
+        toast("已向2个超期事件责任人发送提醒", "success");
+      } else if (norm.includes('巡查') || norm.includes('创建') || norm.includes('专项')) {
+        reply = '📝 审核成功：已基于近期突出的二采区登高未挂双保险带警示，一键创建「二采区高空特种作业防坠」专项闭合巡查。整改验证工单已自动派遣。';
+        toast("已创建二采区高处作业专项巡查草稿", "success");
+      } else if (norm.includes('制度') || norm.includes('条款') || norm.includes('匹配')) {
+        reply = '📘 正在核验国家 GB30871-2022 特种高空作业标准，已成功帮您匹配到安全制度规定，并调出了关联高处作业不安全行为的细分核准信息。';
+        if (onMatchPolicy) {
+          onMatchPolicy();
+        }
       } else {
-        reply = '收到您安全生产的管理指令。安小邦已全天候挂载防区哨兵。今天依然有 3 项需要您亲自审核、人工签字销号的安全干预节点，请在下方列表予以校对。';
+        reply = '收到您的安全管控指令。安维斯 Anvis 正在后台全天候执行视频防区哨兵监察，一切运行良好，暂无次级预警泄漏风险。';
       }
 
       setConversation(prev => [...prev, { role: 'ai', text: reply }]);
       setIsAnswering(false);
-    }, 900);
+    }, 700);
   };
 
   const quickCommands = [
-    { label: '有哪些高风险事件？', text: '有哪些高风险事件？' },
-    { label: '帮我生成安全日报', text: '帮我生成今日安全日报' },
-    { label: '谁需要人工审核确认？', text: '谁需要人工审核确认？' },
-    { label: '查询自动化守护任务', text: '查询自动化策略' }
+    { label: '查今日高风险', text: '查今日高风险' },
+    { label: '生成安全日报', text: '生成今日安全报告' },
+    { label: '催办超期闭环', text: '催促整改超期未闭环事件' },
+    { label: '创建专项巡查', text: '针对高空操作创建专项巡查' },
+    { label: '匹配制度条款', text: '匹配国家特种高空作业管理制度条款' }
   ];
 
   return (
-    <section className="space-y-6 max-w-4xl mx-auto w-full select-none text-left font-sans">
+    <section className="space-y-8 max-w-4xl mx-auto w-full font-sans">
       
-      {/* Central workbench header layout */}
-      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.02)] relative overflow-hidden">
+      {/* Central intelligent agent workbench card */}
+      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-100 shadow-[0_8px_32px_rgba(0,0,0,0.015)] relative overflow-hidden">
         
-        {/* Soft background glows reminiscent of conversational environment */}
-        <div className="absolute -top-32 -left-32 w-80 h-80 bg-blue-50/30 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-32 -right-32 w-80 h-80 bg-indigo-50/30 rounded-full blur-3xl pointer-events-none" />
+        {/* Soft background glow resembling Marvis workspace */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[520px] h-[520px] bg-sky-50/20 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="relative z-10 flex flex-col md:flex-row items-center md:items-start gap-6">
+        <div className="relative z-10 flex flex-col items-center text-center max-w-3xl mx-auto space-y-6">
           
-          {/* Active Copilot Logo Presence */}
-          <div className="flex flex-col items-center shrink-0">
-            <div className="relative">
-              <div className="w-20 h-20 bg-gradient-to-tr from-slate-50/50 to-blue-50 border border-slate-100 rounded-2xl flex items-center justify-center p-2 shadow-inner">
-                <div className="w-14 h-14 bg-white rounded-xl shadow-sm flex items-center justify-center text-3xl border border-slate-100">
-                  🤖
-                </div>
+          {/* Active Copilot Robot Avatar */}
+          <div className="relative flex flex-col items-center">
+            <div className="relative p-1 bg-slate-50 border border-slate-100/80 rounded-3xl shadow-sm">
+              <div className="w-18 h-18 bg-white border border-slate-100/50 rounded-2xl flex items-center justify-center shadow-inner">
+                <span className="text-4xl animate-pulse" style={{ animationDuration: '4s' }}>🤖</span>
               </div>
-              <span className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 border-4 border-white flex items-center justify-center">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-100 animate-pulse" />
-              </span>
             </div>
             
-            <div className="mt-2 text-center">
-              <span className="text-[10px] uppercase font-bold text-blue-600 bg-blue-50 px-2.5 py-0.5 rounded-full tracking-wider">
-                Active Guard
-              </span>
-            </div>
+            {/* Elegant live status beacon */}
+            <span className="absolute bottom-0 right-1 px-2.5 py-0.5 rounded-full bg-emerald-500 border-2 border-white text-[8px] font-bold text-white flex items-center gap-1 shadow-sm leading-none">
+              <span className="w-1 h-1 rounded-full bg-white animate-ping" />
+              安维斯值守中
+            </span>
           </div>
 
-          {/* Interactive conversational bubble & instruction query bar */}
-          <div className="flex-1 w-full space-y-4 text-center md:text-left">
-            <div className="space-y-1">
-              <h3 className="text-base font-bold text-slate-800 tracking-tight">
-                您好，我是您的安全智能体安小邦
-              </h3>
-              <p className="text-xs text-slate-400">
-                可对话下达指令，协助您完成安全派发、日报自动汇总与全天候自动侦测
-              </p>
-            </div>
-
-            {/* Smart Dialog text bubble block showing the latest conversational messages */}
-            <div className="bg-slate-50/50 rounded-2xl p-4 border border-slate-100 text-xs text-slate-700 leading-relaxed space-y-3 shadow-inner">
+          {/* Anvis current thinking / conversation bubble space */}
+          <div className="w-full max-w-xl">
+            <div className="bg-slate-50/50 rounded-2xl p-4 border border-slate-100/60 text-xs text-slate-700 font-medium leading-relaxed shadow-inner font-sans relative">
               {conversation.slice(-1).map((msg, i) => (
-                <div key={i} className="flex gap-2">
-                  <span className="font-bold text-blue-600 shrink-0">
-                    {msg.role === 'ai' ? '[安小邦]' : '[您]'}
+                <div key={i} className="flex gap-2 justify-center sm:justify-start items-start">
+                  <span className="font-bold text-blue-600 shrink-0 text-left">
+                    [安维斯 Anvis] :
                   </span>
-                  <p className="font-medium text-slate-600 leading-relaxed whitespace-pre-wrap">
+                  <p className="text-slate-600 text-left whitespace-pre-wrap leading-relaxed">
                     {msg.text}
                   </p>
                 </div>
               ))}
               
               {isAnswering && (
-                <div className="flex items-center gap-1 text-[11px] text-slate-400 font-medium">
+                <div className="flex items-center justify-center gap-1.5 text-[11px] text-slate-400 font-medium mt-1">
                   <span className="w-1 h-1 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
                   <span className="w-1 h-1 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
                   <span className="w-1 h-1 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
-                  <span className="ml-1">正在提炼厂区监控数据...</span>
+                  <span className="ml-0.5">正在读取厂区AI智能监控流并研判...</span>
                 </div>
               )}
             </div>
+          </div>
 
-            {/* Powerful dialog query input form */}
-            <form 
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleCommandSubmit(query);
-              }}
-              className="relative flex items-center"
-            >
-              <input
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="键入安全任务指令（例如：'有哪些高风险事件'、'生成今日安全日报'）..."
-                className="w-full bg-white border border-slate-200 focus:border-blue-500 focus:outline-none rounded-full h-11 pl-4.5 pr-28 text-xs font-medium text-slate-700 shadow-sm transition-all"
-              />
-              
-              <div className="absolute right-1.5 flex items-center gap-1.5">
-                {query.trim() && (
-                  <button
-                    type="submit"
-                    className="h-8 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1"
-                  >
-                    <Send className="w-3 h-3 text-white" />
-                    安全指派
-                  </button>
-                )}
-                <button
-                  type="button"
-                  onClick={onOpenChat}
-                  className="h-8 px-3.5 bg-slate-100 hover:bg-slate-200/80 text-slate-700 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center"
-                  title="打开高级对话"
-                >
-                  <Sparkles className="w-3 h-3 text-cyan-600" />
-                </button>
-              </div>
-            </form>
-
-            {/* Quick Suggestions instructs */}
-            <div className="flex flex-wrap items-center gap-2 pt-1">
-              <span className="text-[10px] text-slate-450 font-bold uppercase tracking-wider block mr-1">
-                快捷任务:
+          {/* Core double capacities representation: 自动值守中 & 临时任务 */}
+          <div className="w-full max-w-2xl border-t border-slate-50 pt-5 space-y-4">
+            
+            {/* 1. 自动值守中 state row */}
+            <div className="flex flex-col sm:flex-row items-center sm:justify-between px-3 text-xs gap-2">
+              <span className="font-bold text-slate-700 flex items-center gap-1.5">
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
+                自动值守中
               </span>
-              {quickCommands.map((item, idx) => (
-                <button
-                  key={idx}
-                  type="button"
-                  onClick={() => handleCommandSubmit(item.text)}
-                  className="px-3.5 py-1.5 rounded-full bg-white hover:bg-slate-50 border border-slate-200 hover:border-slate-300 text-[10.5px] text-slate-600 font-sans tracking-wide transition-all cursor-pointer active:scale-97 font-medium"
-                >
-                  {item.label}
-                </button>
-              ))}
+              <div className="flex flex-wrap justify-center gap-1.5 text-slate-450 font-medium text-[11px]">
+                <span className="px-2 py-0.5 bg-slate-50 border border-slate-100 rounded text-slate-500">视频风险检测</span>
+                <span className="text-slate-200">｜</span>
+                <span className="px-2 py-0.5 bg-slate-50 border border-slate-100 rounded text-slate-500">高风险提醒</span>
+                <span className="text-slate-200">｜</span>
+                <span className="px-2 py-0.5 bg-slate-50 border border-slate-100 rounded text-slate-500">闭环催办</span>
+                <span className="text-slate-200">｜</span>
+                <span className="px-2 py-0.5 bg-slate-50 border border-slate-100 rounded text-slate-500">日报生成</span>
+              </div>
+            </div>
+
+            {/* 2. 临时任务 dynamic command section */}
+            <div className="space-y-3.5 text-left bg-slate-50/30 p-4 rounded-2xl border border-slate-100/50">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                  <Activity className="w-3.5 h-3.5 text-blue-500" />
+                  临时任务
+                </span>
+                <span className="text-[10px] text-slate-400 font-medium">输入即可触发一键下达控制</span>
+              </div>
+
+              {/* Dynamic dialog input form */}
+              <form 
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleCommandSubmit(query);
+                }}
+                className="relative flex items-center"
+              >
+                <input
+                  type="text"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="让安维斯 Anvis 帮你查风险、催闭环、生成报告或创建任务……"
+                  className="w-full bg-white border border-slate-100/90 focus:border-blue-500 focus:outline-none rounded-2xl h-10 px-4 text-xs font-medium text-slate-700 shadow-inner transition-all placeholder:text-slate-350"
+                />
+                
+                <div className="absolute right-1 flex items-center gap-1">
+                  {query.trim() && (
+                    <button
+                      type="submit"
+                      className="h-8 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1 shadow-sm active:scale-97"
+                    >
+                      <Send className="w-2.5 h-2.5" />
+                      下达
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={onOpenChat}
+                    className="h-8 w-8 hover:bg-slate-200/50 text-slate-500 hover:text-slate-700 rounded-xl transition-all cursor-pointer flex items-center justify-center"
+                    title="安维斯 Anvis 深度诊断助手"
+                  >
+                    <Sparkles className="w-3.5 h-3.5 text-blue-500" />
+                  </button>
+                </div>
+              </form>
+
+              {/* Quick Pills */}
+              <div className="flex flex-wrap gap-1.5 pt-1">
+                {quickCommands.map((item, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => handleCommandSubmit(item.text)}
+                    className="px-3 py-1.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-100/80 hover:border-slate-200 text-[11px] text-slate-600 font-sans font-medium transition-all cursor-pointer active:scale-97 hover:text-slate-900"
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
             </div>
 
           </div>
@@ -192,97 +215,85 @@ export default function AiAssistantDashboard({
 
       </div>
 
-      {/* Dual column: Automated Background rules & What An Xiaobang handles */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        
-        {/* Solutions An Xiaobang covers */}
-        <div className="bg-white rounded-2xl p-5.5 border border-slate-100 shadow-[0_2px_12px_rgba(0,0,0,0.01)] space-y-4">
-          <div className="flex items-center gap-2 pb-1 border-b border-slate-50">
-            <HelpCircle className="w-4 h-4 text-blue-500" />
-            <h4 className="text-xs font-bold text-slate-800 tracking-wide">
-              安小邦能解决的问题
-            </h4>
-          </div>
-
-          <div className="space-y-3">
-            <div className="flex items-start gap-2.5">
-              <span className="text-base">👨‍🏭</span>
-              <div>
-                <span className="text-xs font-bold text-slate-700 block">违规穿戴与不规范登高监查</span>
-                <span className="text-[10.5px] text-slate-450 leading-relaxed block">
-                  自动捕捉高处作业不挂双扣、登高无合格PPE（反光皮服/避险隔绝特服）
-                </span>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-2.5">
-              <span className="text-base">📢</span>
-              <div>
-                <span className="text-xs font-bold text-slate-700 block">红线区域危险闯入即时震退</span>
-                <span className="text-[10.5px] text-slate-450 leading-relaxed block">
-                  高电压变配电区域越隔离线，联动本地音炮声光雷暴，实施强警告
-                </span>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-2.5">
-              <span className="text-base">📋</span>
-              <div>
-                <span className="text-xs font-bold text-slate-700 block">多端闭环智能待办单流转</span>
-                <span className="text-[10.5px] text-slate-450 leading-relaxed block">
-                  自主整理现场异常快照，一键合成工单发往班组长协助进行核减跟进
-                </span>
-              </div>
-            </div>
-          </div>
+      {/* 三、自动值守任务 list of four specific state cards */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-2 pl-1">
+          <RefreshCw className="w-4 h-4 text-slate-400 animate-spin" style={{ animationDuration: '10s' }} />
+          <h3 className="text-base font-bold text-slate-800 tracking-tight">
+            自动值守任务
+          </h3>
         </div>
 
-        {/* Running Automated Background Tasks */}
-        <div className="bg-white rounded-2xl p-5.5 border border-slate-100 shadow-[0_2px_12px_rgba(0,0,0,0.01)] space-y-4">
-          <div className="flex items-center gap-2 pb-1 border-b border-slate-50">
-            <Settings className="w-4 h-4 text-emerald-500 animate-spin" style={{ animationDuration: '8s' }} />
-            <h4 className="text-xs font-bold text-slate-800 tracking-wide flex items-center justify-between w-full">
-              <span>正在静默挂载的自动化守护任务</span>
-              <span className="text-[9.5px] text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full font-bold">
-                已启用守护守护
-              </span>
-            </h4>
-          </div>
-
-          <div className="space-y-3 text-xs">
-            <div className="p-2.5 rounded-xl bg-slate-50/50 border border-slate-100/60 flex items-center justify-between gap-3">
-              <div>
-                <p className="text-xs font-bold text-slate-700">128路生产视频毫秒级巡查</p>
-                <p className="text-[10px] text-slate-400 mt-0.5">每秒60帧高频率算法轮循无盲区</p>
-              </div>
-              <span className="text-[10px] font-extrabold text-emerald-600 shrink-0 flex items-center gap-1 bg-emerald-50 px-2 py-0.5 rounded-md">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+          
+          {/* Card 1: 视频风险检测 */}
+          <div className="bg-white rounded-2xl p-5 border border-slate-100/80 shadow-[0_2px_12px_rgba(0,0,0,0.01)] flex flex-col justify-between h-36">
+            <div className="space-y-1.5">
+              <span className="text-xs font-bold text-slate-750 block">1. 视频风险检测</span>
+              <p className="text-[11px] text-slate-400 font-medium leading-relaxed">
+                持续识别PPE、越界、高处作业等风险线索
+              </p>
+            </div>
+            <div className="flex items-center justify-between pt-2">
+              <span className="text-[10px] font-bold text-slate-405">值守监测</span>
+              <span className="text-[10px] font-extrabold text-emerald-600 flex items-center gap-1 bg-emerald-50 px-2 py-0.5 rounded-full">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
-                侦听中
-              </span>
-            </div>
-
-            <div className="p-2.5 rounded-xl bg-slate-50/50 border border-slate-100/60 flex items-center justify-between gap-3">
-              <div>
-                <p className="text-xs font-bold text-slate-700">重点高架定向智能语音播报</p>
-                <p className="text-[10px] text-slate-400 mt-0.5">高音大喇叭现场喊麦驱离，纠违干预</p>
-              </div>
-              <span className="text-[10px] font-bold text-blue-600 shrink-0 bg-blue-50 px-2 py-0.5 rounded-md">
-                已就绪
-              </span>
-            </div>
-
-            <div className="p-2.5 rounded-xl bg-slate-50/50 border border-slate-100/60 flex items-center justify-between gap-3">
-              <div>
-                <p className="text-xs font-bold text-slate-700">多路待确认工单定时唤醒</p>
-                <p className="text-[10px] text-slate-400 mt-0.5">触发对逾期未核查工单自动转交短信</p>
-              </div>
-              <span className="text-[10px] font-bold text-indigo-600 shrink-0 bg-indigo-50 px-2 py-0.5 rounded-md">
-                智能轮询
+                运行中
               </span>
             </div>
           </div>
-        </div>
 
+          {/* Card 2: 高风险提醒 */}
+          <div className="bg-white rounded-2xl p-5 border border-slate-100/80 shadow-[0_2px_12px_rgba(0,0,0,0.01)] flex flex-col justify-between h-36">
+            <div className="space-y-1.5">
+              <span className="text-xs font-bold text-slate-750 block">2. 高风险提醒</span>
+              <p className="text-[11px] text-slate-400 font-medium leading-relaxed">
+                发现高风险事件后自动通知责任人
+              </p>
+            </div>
+            <div className="flex items-center justify-between pt-2">
+              <span className="text-[10px] font-bold text-slate-405">微信/短信通知</span>
+              <span className="text-[10px] font-extrabold text-emerald-600 flex items-center gap-1 bg-emerald-50 px-2 py-0.5 rounded-full">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
+                运行中
+              </span>
+            </div>
+          </div>
+
+          {/* Card 3: 闭环催办 */}
+          <div className="bg-white rounded-2xl p-5 border border-slate-100/80 shadow-[0_2px_12px_rgba(0,0,0,0.01)] flex flex-col justify-between h-36">
+            <div className="space-y-1.5">
+              <span className="text-xs font-bold text-slate-750 block">3. 闭环催办</span>
+              <p className="text-[11px] text-slate-400 font-medium leading-relaxed">
+                超期未反馈事件自动提醒责任人
+              </p>
+            </div>
+            <div className="flex items-center justify-between pt-2">
+              <span className="text-[10px] font-bold text-slate-405">自动催办</span>
+              <span className="text-[10px] font-extrabold text-emerald-600 flex items-center gap-1 bg-emerald-50 px-2 py-0.5 rounded-full">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
+                运行中
+              </span>
+            </div>
+          </div>
+
+          {/* Card 4: 日报生成 */}
+          <div className="bg-white rounded-2xl p-5 border border-slate-100/80 shadow-[0_2px_12px_rgba(0,0,0,0.01)] flex flex-col justify-between h-36">
+            <div className="space-y-1.5">
+              <span className="text-xs font-bold text-slate-750 block">4. 日报生成</span>
+              <p className="text-[11px] text-slate-400 font-medium leading-relaxed">
+                每天18:00自动生成安全日报草稿
+              </p>
+            </div>
+            <div className="flex items-center justify-between pt-2">
+              <span className="text-[10px] font-bold text-slate-405">定时汇总</span>
+              <span className="text-[10px] font-extrabold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">
+                已启用
+              </span>
+            </div>
+          </div>
+
+        </div>
       </div>
 
     </section>

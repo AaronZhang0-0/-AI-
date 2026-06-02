@@ -30,7 +30,7 @@ export default function DailyReportModal({ onClose, toast }: DailyReportModalPro
           <div className="flex items-center gap-2.5">
             <FileText className="w-5 h-5 text-cyan-400" />
             <div>
-              <h3 className="text-sm font-bold font-sans">企业AI智能工作区：安小邦安全统计预警简报</h3>
+              <h3 className="text-sm font-bold font-sans">企业AI智能工作区：安维斯安全统计预警简报</h3>
               <p className="text-[10px] text-slate-300 font-mono tracking-wider mt-0.5">HSSE COMPLIANCE AUTOMATION LOGS</p>
             </div>
           </div>
@@ -52,7 +52,7 @@ export default function DailyReportModal({ onClose, toast }: DailyReportModalPro
               现场不安全行为干预与策略闭环统计日报
             </h2>
             <div className="flex items-center justify-center gap-4 text-xs font-mono text-slate-500">
-              <span>生成人：安全助理·安小邦</span>
+              <span>生成人：安全守护智能体·安维斯</span>
               <span>发布时间：2026年06月02日 09:20 (第194期)</span>
               <span className="text-emerald-600 font-semibold flex items-center gap-1">
                 <ShieldCheck className="w-3.5 h-3.5" />

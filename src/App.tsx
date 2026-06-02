@@ -80,7 +80,7 @@ export default function App() {
       return evt;
     }));
 
-    triggerToast("🤖 安小邦已触发安全纠违语音警示及短信推送！现场干预任务现已发送至当班安全代表。", 'success');
+    triggerToast("🤖 安维斯 Anvis 已触发安全纠违语音警示及短信推送！现场干预任务现已发送至当班安全代表。", 'success');
   };
 
   // Search filter lists
@@ -140,39 +140,47 @@ export default function App() {
           <div className="max-w-4xl mx-auto w-full flex flex-col md:flex-row md:items-end justify-between gap-4 pb-5 select-none border-b border-slate-100/80">
             <div>
               <h2 className="text-xl md:text-2xl font-bold text-slate-800 tracking-tight font-sans">
-                安小邦正在值守
+                安维斯已进入安全值守模式
               </h2>
               <p className="text-xs text-slate-400 font-medium font-sans mt-1">
-                今日发现 32 起风险线索
+                自动检测现场风险，也支持你随时指派临时任务。
               </p>
             </div>
             
             {/* Minimalist Stats */}
             <div className="flex items-center gap-6 text-xs text-slate-500 font-medium font-sans">
               <div className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
+                <span className="text-slate-450">今日风险线索</span>
+                <span className="font-extrabold text-slate-850 text-sm">32</span>
+              </div>
+              <div className="flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
-                <span className="text-slate-400">高风险</span>
-                <span className="font-extrabold text-slate-800 text-sm">5</span>
+                <span className="text-slate-450">高风险</span>
+                <span className="font-extrabold text-slate-850 text-sm">5</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                <span className="text-slate-400">待确认</span>
-                <span className="font-extrabold text-slate-800 text-sm">8</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
-                <span className="text-slate-400">已干预</span>
-                <span className="font-extrabold text-slate-800 text-sm">12</span>
+                <span className="text-slate-450">待确认</span>
+                <span className="font-extrabold text-slate-850 text-sm">8</span>
               </div>
             </div>
           </div>
 
-          {/* Module 2: 安小邦智能工作区 */}
+          {/* Module 2: 安维斯智能大屏工作区 */}
           <AiAssistantDashboard 
             onFocusThreeMatters={handleFocusThreeMatters}
             onFocusPendingEvent={handleFocusPendingEvent}
             onOpenReport={handleOpenReport}
             onOpenChat={() => setIsChatOpen(true)}
+            onMatchPolicy={() => {
+              const highEvent = riskEvents.find(e => e.id === "REV-20260602-01");
+              if (highEvent) {
+                setSelectedEvent(highEvent);
+                triggerToast("🤖 已为您智能匹配并开启《高处作业管理规范》关联复查条款", 'success');
+              }
+            }}
+            toast={(m, type) => triggerToast(m, type || 'info')}
           />
 
           {/* Module 3: 今日必须处理的3件事 */}

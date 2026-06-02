@@ -46,7 +46,7 @@ export default function EventDetailsModal({
     if (interventionState !== 'idle') return;
     
     setInterventionState('executing');
-    toast("🤖 安小邦通报现场：启动不安全行为语音播发并派发核查工单...");
+    toast("🤖 安维斯 Anvis 通报现场：启动不安全行为语音播发并派发核查工单...");
 
     setTimeout(() => {
       setInterventionState('success');
