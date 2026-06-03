@@ -6,8 +6,6 @@ import { RiskEvent } from './types';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import AiAssistantDashboard from './components/AiAssistantDashboard';
-import ThreeUrgentMatters from './components/ThreeUrgentMatters';
-import AiTaskFlow from './components/AiTaskFlow';
 import AiChatbotDrawer from './components/AiChatbotDrawer';
 import EventDetailsModal from './components/EventDetailsModal';
 import DailyReportModal from './components/DailyReportModal';
@@ -18,6 +16,7 @@ export default function App() {
   // State definitions
   const [currentTab, setCurrentTab] = useState('office');
   const [searchQuery, setSearchQuery] = useState('');
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   
   // Real active list states
   const [riskEvents, setRiskEvents] = useState<RiskEvent[]>(INITIAL_RISK_EVENTS);
@@ -96,7 +95,7 @@ export default function App() {
   });
 
   return (
-    <div id="saas-container-root" className="min-h-screen bg-[#F8FAFC] flex font-sans text-slate-800 antialiased relative">
+    <div id="saas-container-root" className="h-screen overflow-hidden bg-[#F8FAFC] flex font-sans text-slate-800 antialiased relative">
       
       {/* 1. Global Notification Toast Banner */}
       {toastMessage && (
@@ -113,7 +112,7 @@ export default function App() {
           <span className="font-medium tracking-wide">{toastMessage}</span>
         </div>
       )}
-
+ 
       {/* 2. Left side deep blue Navigation panel */}
       <Sidebar 
         currentTab={currentTab} 
@@ -122,79 +121,58 @@ export default function App() {
           triggerToast(`已切入「${tab === 'office' ? 'AI安全办公室' : tab}」主屏`);
         }} 
         toast={(m) => triggerToast(m, 'info')}
+        isCollapsed={isSidebarCollapsed}
       />
-
+ 
       {/* 3. Main Dashboard flow layout wrapper */}
-      <div id="main-content-flow" className="flex-1 flex flex-col min-w-0">
+      <div id="main-content-flow" className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
         
         {/* Top Header bar */}
         <Header 
           onSearch={(query) => setSearchQuery(query)}
           toast={(m) => triggerToast(m, 'info')}
+          isSidebarCollapsed={isSidebarCollapsed}
+          onToggleSidebar={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
         />
-
+ 
         {/* Dashboard Panels */}
-        <main className="flex-1 p-8 space-y-8 max-w-5xl mx-auto w-full overflow-y-auto">
+        <main className={`flex-1 px-4 lg:px-8 py-3.5 flex flex-col min-h-0 overflow-hidden w-full mx-auto gap-3.5 transition-all duration-300 ${
+          isSidebarCollapsed ? 'max-w-[1500px]' : 'max-w-6xl'
+        }`}>
           
-          {/* Top Title & Quick Minimalist stats */}
-          <div className="max-w-4xl mx-auto w-full flex flex-col md:flex-row md:items-end justify-between gap-4 pb-5 select-none border-b border-slate-100/80">
-            <div>
-              <h2 className="text-xl md:text-2xl font-bold text-slate-800 tracking-tight font-sans">
-                安维斯已进入安全值守模式
+          {/* Top Title */}
+          <div className="w-full flex items-center justify-between select-none pb-2 border-b border-slate-100/80 shrink-0">
+            <div className="flex items-center gap-3">
+              <h2 className="text-base font-bold text-slate-850 tracking-tight font-sans">
+                安维斯已进入智慧值守运行中
               </h2>
-              <p className="text-xs text-slate-400 font-medium font-sans mt-1">
-                自动检测现场风险，也支持你随时指派临时任务。
-              </p>
+              <span className="text-[10px] bg-emerald-500 text-white font-extrabold px-1.5 py-0.5 rounded shadow-sm flex items-center gap-1">
+                <span className="w-1.5 h-1.5 bg-white rounded-full animate-clock animate-pulse" />
+                智能联动就绪
+              </span>
             </div>
-            
-            {/* Minimalist Stats */}
-            <div className="flex items-center gap-6 text-xs text-slate-500 font-medium font-sans">
-              <div className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
-                <span className="text-slate-450">今日风险线索</span>
-                <span className="font-extrabold text-slate-850 text-sm">32</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
-                <span className="text-slate-450">高风险</span>
-                <span className="font-extrabold text-slate-850 text-sm">5</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                <span className="text-slate-450">待确认</span>
-                <span className="font-extrabold text-slate-850 text-sm">8</span>
-              </div>
-            </div>
+            <p className="text-[11px] text-slate-400 font-medium font-sans">
+              实时哨所：已激活 128 路 AI 前端 ｜ 深度对齐国家特高不安全规范 GB30871
+            </p>
           </div>
-
-          {/* Module 2: 安维斯智能大屏工作区 */}
-          <AiAssistantDashboard 
-            onFocusThreeMatters={handleFocusThreeMatters}
-            onFocusPendingEvent={handleFocusPendingEvent}
-            onOpenReport={handleOpenReport}
-            onOpenChat={() => setIsChatOpen(true)}
-            onMatchPolicy={() => {
-              const highEvent = riskEvents.find(e => e.id === "REV-20260602-01");
-              if (highEvent) {
-                setSelectedEvent(highEvent);
-                triggerToast("🤖 已为您智能匹配并开启《高处作业管理规范》关联复查条款", 'success');
-              }
-            }}
-            toast={(m, type) => triggerToast(m, type || 'info')}
-          />
-
-          {/* Module 3: 今日必须处理的3件事 */}
-          <ThreeUrgentMatters 
-            riskEvents={filteredRiskEvents}
-            onSelectEvent={handleSelectRiskRow}
-            shouldHighlightRiskId={shouldHighlightRiskId}
-            resetHighlight={() => setShouldHighlightRiskId(null)}
-            toast={(m) => triggerToast(m, 'info')}
-          />
-
-          {/* Module 4: AI 任务流 / 动态 */}
-          <AiTaskFlow />
-
+ 
+          {/* Module 2: 安维斯智能双栏值守工作区 (左栏任务, 右栏对话) */}
+          <div className="flex-1 min-h-0 overflow-hidden">
+            <AiAssistantDashboard 
+              riskEvents={filteredRiskEvents}
+              onSelectEvent={handleSelectRiskRow}
+              onOpenReport={handleOpenReport}
+              onMatchPolicy={() => {
+                const highEvent = riskEvents.find(e => e.id === "REV-20260602-01");
+                if (highEvent) {
+                  setSelectedEvent(highEvent);
+                  triggerToast("已智能匹配《高处作业管理规范》关联制度条款", 'success');
+                }
+              }}
+              toast={(m, type) => triggerToast(m, type || 'info')}
+            />
+          </div>
+ 
         </main>
       </div>
 

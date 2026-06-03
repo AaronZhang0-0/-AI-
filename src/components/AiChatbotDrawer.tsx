@@ -129,15 +129,6 @@ export default function AiChatbotDrawer({
 
   return (
     <>
-      {/* 1. Floating Trigger Button */}
-      <button
-        onClick={onToggle}
-        className="fixed bottom-8 right-8 z-40 w-16 h-16 bg-blue-600 rounded-full shadow-2xl flex flex-col items-center justify-center text-white border-4 border-white hover:scale-105 active:scale-95 transition-all cursor-pointer group"
-      >
-        <div className="text-xl group-hover:animate-bounce">🤖</div>
-        <div className="text-[10px] font-bold font-sans">安维斯</div>
-      </button>
-
       {/* 2. Side Dialog Drawer Panel */}
       {isOpen && (
         <div className="fixed inset-y-0 right-0 w-96 bg-white shadow-2xl z-50 flex flex-col justify-between border-l border-slate-105 animate-in slide-in-from-right duration-250 select-none">

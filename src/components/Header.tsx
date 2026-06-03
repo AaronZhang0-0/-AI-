@@ -4,40 +4,39 @@
  */
 
 import React, { useState } from 'react';
-import { Search, Bell, ChevronDown, User, LogOut, Settings } from 'lucide-react';
+import { Menu, Bell, ChevronDown, User, LogOut, Settings } from 'lucide-react';
 
 interface HeaderProps {
   onSearch: (query: string) => void;
   toast: (msg: string) => void;
+  isSidebarCollapsed?: boolean;
+  onToggleSidebar?: () => void;
 }
 
-export default function Header({ onSearch, toast }: HeaderProps) {
+export default function Header({ onSearch, toast, isSidebarCollapsed, onToggleSidebar }: HeaderProps) {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
-  const [searchVal, setSearchVal] = useState('');
-
-  const clearSearch = () => {
-    setSearchVal('');
-    onSearch('');
-    toast('已重置搜索');
-  };
 
   return (
     <header className="h-14 bg-white border-b border-slate-200 flex items-center justify-between px-6 shrink-0 shadow-sm sticky top-0 z-30">
-      {/* Search Bar - matching the exact design HTML input-with-icon style */}
-      <div className="flex items-center gap-2">
-        <div className="text-slate-400">
-          <Search className="w-5 h-5" />
+      {/* Sidebar expand/collapse toggle & Brand Title */}
+      <div className="flex items-center gap-3">
+        {onToggleSidebar && (
+          <button
+            onClick={onToggleSidebar}
+            title={isSidebarCollapsed ? "展开导航" : "缩进导航"}
+            className="p-2 hover:bg-slate-50 hover:text-blue-600 rounded-lg text-slate-500 transition-all cursor-pointer flex items-center justify-center active:scale-95"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
+        )}
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-extrabold text-blue-600 bg-blue-50 px-2 py-0.5 rounded tracking-wide font-mono">
+            ANVIS
+          </span>
+          <span className="text-sm font-bold text-slate-700 tracking-tight">
+            安维斯智慧值守平台
+          </span>
         </div>
-        <input 
-          type="text" 
-          placeholder="搜索事件、策略、人员、区域等..." 
-          value={searchVal}
-          onChange={(e) => {
-            setSearchVal(e.target.value);
-            onSearch(e.target.value);
-          }}
-          className="bg-transparent border-none text-sm outline-none w-80 text-slate-700"
-        />
       </div>
 
       {/* Utilities */}
