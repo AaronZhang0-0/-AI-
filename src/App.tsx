@@ -48,7 +48,7 @@ export default function App() {
 
   const handleOpenReport = () => {
     setIsReportOpen(true);
-    triggerToast("📊 正在根据今日轮询报告生成安全日报简牍...", 'info');
+    triggerToast("📊 正在生成今日安全日报。", 'info');
   };
 
   const handleFocusThreeMatters = () => {
@@ -69,17 +69,13 @@ export default function App() {
       if (evt.id === eventId) {
         return {
           ...evt,
-          status: '干预中',
-          details: {
-            ...evt.details,
-            conclusion: `【现场语音已送达】已成功向二采区A3部位现场定向语音喇叭播发安全告知。临近现场安全员已收到待核告警工单，正在呼查人员纠正！\n\n(原识别内容：${evt.details.conclusion})`
-          }
+          status: '干预中'
         };
       }
       return evt;
     }));
 
-    triggerToast("🤖 安维斯 Anvis 已触发安全纠违语音警示及短信推送！现场干预任务现已发送至当班安全代表。", 'success');
+    triggerToast("🤖 已触发现场语音提醒，并通知当班安全员。", 'success');
   };
 
   // Search filter lists
@@ -155,7 +151,7 @@ export default function App() {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
                 </span>
-                系统防线已启动
+                自动值守中
               </span>
             </div>
           </div>

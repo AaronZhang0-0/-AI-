@@ -85,13 +85,13 @@ export default function AiChatbotDrawer({
         // Fallback text parsing
         const lower = text.toLowerCase();
         if (lower.includes("高架") || lower.includes("高处") || lower.includes("安全带") || lower.includes("坠落")) {
-          replyText = "发现您对高处作业感兴趣。今日 **09:12** 在二采区曾触发「高处作业未系安全带」紧急事件。系统已调动二采区音柱全智能督导喊麦。需要为您**定位并打开该事件的研究面板**吗？";
+          replyText = "发现您对高处作业感兴趣。今日 **09:12** 在二采区曾触发「高处作业未系安全带」安全事件。系统已向现场播放语音警示。需要为您**定位并打开该事件的详情面板**吗？";
         } else if (lower.includes("你好") || lower.includes("在吗") || lower.includes("你好呀")) {
-          replyText = "您好！我是安维斯 Anvis，您的智能安全助手。很高兴为您服务。请问今天有什么安全检查任务需要我辅助判定或生成汇报吗？";
+          replyText = "您好！我是安维斯 Anvis，您的智能安全助手。很高兴为您服务。请问今天有什么安全检查任务需要我辅助判定或生成日报吗？";
         } else if (lower.includes("日报") || lower.includes("简报") || lower.includes("报告")) {
           replyText = PRESET_CHAT_ANSWERS["帮我生成今日安全日报。"].reply;
         } else if (lower.includes("配电") || lower.includes("闯入") || lower.includes("配电房")) {
-          replyText = "今天 **09:08** 在配电隔离检修区发生实习电工越界越红线。系统已进行了防烟吼暴笛震退。请相关带班主任复检。";
+          replyText = "今天 **09:08** 在配电柜区域发生越界。系统已向现场实时播发语音告警。请相关值班主管核查。";
         }
       }
 

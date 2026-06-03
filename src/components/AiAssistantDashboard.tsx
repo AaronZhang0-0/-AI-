@@ -415,7 +415,7 @@ export default function AiAssistantDashboard({
           <div className="pt-3 border-t border-slate-100/60 flex items-center justify-between text-[10px] text-slate-400 font-bold shrink-0">
             <span className="flex items-center gap-1">
               <ShieldCheck className="w-3.5 h-3.5 text-blue-600" />
-              后台自动值守挂载生效
+              自动任务运行中
             </span>
             <span>更新时间：刚刚</span>
           </div>
