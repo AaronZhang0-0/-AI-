@@ -57,10 +57,10 @@ export default function EventDetailsModal({
   };
 
   const levelColor = event.level === "高" 
-    ? "text-rose-600 bg-rose-50 border-rose-100" 
+    ? "text-rose-600 bg-rose-50/40 border-rose-100" 
     : event.level === "中" 
-      ? "text-amber-650 bg-amber-50 border-amber-150" 
-      : "text-emerald-600 bg-emerald-50 border-emerald-100";
+      ? "text-amber-700 bg-amber-50/30 border-amber-200/50" 
+      : "text-emerald-600 bg-emerald-50/30 border-emerald-100/55";
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end">
@@ -103,7 +103,7 @@ export default function EventDetailsModal({
         <div className="flex-1 overflow-y-auto p-6 space-y-5.5 select-none scrollbar">
           
           {/* Main info tile */}
-          <div className="p-4 bg-slate-50 border border-slate-150 rounded-2xl grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="p-4 bg-slate-50/50 border border-slate-100/80 rounded-2xl grid grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
               <span className="text-[10px] text-slate-400">风险事件</span>
               <div className="text-xs font-bold text-slate-800 mt-1">{event.event}</div>
@@ -138,7 +138,7 @@ export default function EventDetailsModal({
               <Cpu className="w-4.5 h-4.5 text-blue-600" />
               <span>一、AI 捕获与识别实录</span>
             </div>
-            <div className="p-4 bg-blue-50/40 border border-blue-105 rounded-xl text-[12.5px] leading-relaxed text-slate-700 relative">
+            <div className="p-4 bg-blue-50/30 border border-blue-100/60 rounded-xl text-[12.5px] leading-relaxed text-slate-700 relative">
               <p className="font-sans">{event.details.conclusion}</p>
               
               {/* Graphic Wireframe Mock placeholder representing industrial video capture */}
@@ -170,11 +170,11 @@ export default function EventDetailsModal({
               <BookOpen className="w-4.5 h-4.5 text-indigo-600" />
               <span>二、匹配企业制度规章</span>
             </div>
-            <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl text-[12px] text-slate-600 space-y-2">
+            <div className="p-4 bg-slate-50/50 border border-slate-100/80 rounded-xl text-[12px] text-slate-600 space-y-2">
               <p className="italic leading-relaxed font-sans mt-0.5">
                 {event.details.regulation}
               </p>
-              <div className="text-[10px] text-slate-400 font-mono flex items-center justify-between pt-1 border-t border-slate-150">
+              <div className="text-[10px] text-slate-400 font-mono flex items-center justify-between pt-1 border-t border-slate-100/60">
                 <span>绑定规制号: HSSE-P-高处作业通用细则-3.1</span>
                 <span className="text-blue-500 hover:underline cursor-pointer flex items-center gap-0.5">
                   查看源制度白皮书
@@ -190,7 +190,7 @@ export default function EventDetailsModal({
               <Sliders className="w-4.5 h-4.5 text-amber-600" />
               <span>三、自动命中干预策略卡</span>
             </div>
-            <div className="p-4 bg-amber-50/30 border border-amber-205 rounded-xl space-y-3">
+            <div className="p-4 bg-amber-50/15 border border-amber-100 rounded-xl space-y-3">
               <div className="text-xs font-bold text-amber-800">
                 策略卡：{event.details.strategy}
               </div>
@@ -218,7 +218,7 @@ export default function EventDetailsModal({
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
               
-              <label className="flex items-start gap-3 p-3 bg-slate-50 border border-slate-150 rounded-xl cursor-pointer hover:bg-slate-100 transition-colors">
+              <label className="flex items-start gap-3 p-3 bg-slate-50/40 border border-slate-100 rounded-xl cursor-pointer hover:bg-slate-50/90 transition-colors">
                 <input 
                   type="checkbox"
                   checked={confirmViolation}
@@ -231,7 +231,7 @@ export default function EventDetailsModal({
                 </div>
               </label>
 
-              <label className="flex items-start gap-3 p-3 bg-slate-50 border border-slate-150 rounded-xl cursor-pointer hover:bg-slate-100 transition-colors">
+              <label className="flex items-start gap-3 p-3 bg-slate-50/40 border border-slate-100 rounded-xl cursor-pointer hover:bg-slate-50/90 transition-colors">
                 <input 
                   type="checkbox"
                   checked={confirmClosure}
@@ -298,7 +298,7 @@ export default function EventDetailsModal({
         <div className="px-6 py-4 border-t border-slate-100 flex items-center justify-between bg-slate-50">
           <button
             onClick={onClose}
-            className="px-4.5 py-2 border border-slate-250 hover:bg-slate-100 text-slate-600 rounded-xl text-xs font-semibold hover:text-slate-800 transition-colors cursor-pointer"
+            className="px-4.5 py-2 border border-slate-200 hover:bg-slate-100 text-slate-600 rounded-xl text-xs font-semibold hover:text-slate-800 transition-colors cursor-pointer"
           >
             关闭详情
           </button>

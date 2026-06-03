@@ -23,7 +23,7 @@ export default function DailyReportModal({ onClose, toast }: DailyReportModalPro
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-200 select-none">
-      <div className="relative w-full max-w-3xl bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-150 animate-in zoom-in-95 duration-250 flex flex-col max-h-[90vh]">
+      <div className="relative w-full max-w-3xl bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-100 animate-in zoom-in-95 duration-250 flex flex-col max-h-[90vh]">
         
         {/* Header */}
         <div className="px-6 py-4.5 bg-gradient-to-r from-blue-900 to-indigo-900 text-white flex items-center justify-between">
@@ -47,7 +47,7 @@ export default function DailyReportModal({ onClose, toast }: DailyReportModalPro
         <div className="flex-1 overflow-y-auto p-8 text-slate-800 space-y-6 bg-slate-50/50 scrollbar font-sans">
           
           {/* Formal Letterhead */}
-          <div className="text-center space-y-2 border-b border-dashed border-slate-205 pb-5">
+          <div className="text-center space-y-2 border-b border-dashed border-slate-100 pb-5">
             <h2 className="text-lg font-bold text-slate-900 tracking-wide">
               现场不安全行为干预与策略闭环统计日报
             </h2>
@@ -63,23 +63,23 @@ export default function DailyReportModal({ onClose, toast }: DailyReportModalPro
 
           {/* Section 1: Target Stats Panel */}
           <div className="space-y-3.5">
-            <h4 className="text-xs font-bold text-slate-800 flex items-center gap-1.5 border-l-3 border-blue-600 pl-2">
+            <h4 className="text-xs font-bold text-slate-800 flex items-center gap-1.5 border-l-4 border-blue-600 pl-2 select-none">
               一、 厂区实时安全运行指标
             </h4>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="p-3.5 rounded-xl bg-white border border-slate-150 shadow-sm text-left">
+              <div className="p-3.5 rounded-xl bg-white border border-slate-100 shadow-sm text-left">
                 <span className="text-[10.5px] text-slate-400">今日主动侦测事件</span>
                 <div className="text-xl font-bold font-mono text-slate-800 mt-1">32 起</div>
                 <span className="text-[9.5px] text-emerald-600 font-medium">同比昨日下降 8.5% ↓</span>
               </div>
-              <div className="p-3.5 rounded-xl bg-white border border-slate-150 shadow-sm text-left">
+              <div className="p-3.5 rounded-xl bg-white border border-slate-100 shadow-xs text-left text-slate-800">
                 <span className="text-[10.5px] text-slate-400">策略自动激活执行</span>
                 <div className="text-xl font-bold font-mono text-slate-800 mt-1">14 次</div>
                 <span className="text-[9.5px] text-amber-600 font-medium">涉及智能定向音柱 5 次</span>
               </div>
-              <div className="p-3.5 rounded-xl bg-white border border-slate-150 shadow-sm text-left">
+              <div className="p-3.5 rounded-xl bg-white border border-slate-100 shadow-xs text-left">
                 <span className="text-[10.5px] text-slate-400">事件干预达成闭环</span>
-                <div className="text-xl font-bold font-mono text-slate-850 mt-1">92.4%</div>
+                <div className="text-xl font-bold font-mono text-slate-800 mt-1">92.4%</div>
                 <span className="text-[9.5px] text-cyan-600 font-medium">28起归档 | 4起跟踪中</span>
               </div>
             </div>
@@ -87,7 +87,7 @@ export default function DailyReportModal({ onClose, toast }: DailyReportModalPro
 
           {/* Section 2: Violation Breakdown table */}
           <div className="space-y-3.5">
-            <h4 className="text-xs font-bold text-slate-800 flex items-center gap-1.5 border-l-3 border-blue-600 pl-2">
+            <h4 className="text-xs font-bold text-slate-800 flex items-center gap-1.5 border-l-4 border-blue-600 pl-2 select-none">
               二、 隐患及不安全行为构成明细
             </h4>
             <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white">
@@ -160,7 +160,7 @@ export default function DailyReportModal({ onClose, toast }: DailyReportModalPro
           <div className="flex gap-2">
             <button
               onClick={handleCopy}
-              className="px-3.5 py-1.5 border border-slate-250 hover:bg-slate-100 rounded-xl text-xs text-slate-600 transition-colors flex items-center gap-1 font-semibold cursor-pointer"
+              className="px-3.5 py-1.5 border border-slate-200 hover:bg-slate-100 rounded-xl text-xs text-slate-600 transition-colors flex items-center gap-1 font-semibold cursor-pointer"
             >
               <Copy className="w-3.5 h-3.5" />
               复制文本

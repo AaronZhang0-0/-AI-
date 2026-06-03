@@ -99,7 +99,7 @@ export default function App() {
       
       {/* 1. Global Notification Toast Banner */}
       {toastMessage && (
-        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[100] px-4.5 py-3 rounded-full bg-slate-900 border border-slate-755 text-white flex items-center gap-2.5 shadow-xl animate-in fade-in slide-in-from-top-4 duration-300 pointer-events-none select-none text-xs">
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[100] px-4.5 py-3 rounded-full bg-slate-900 border border-slate-800/80 text-white flex items-center gap-2.5 shadow-xl animate-in fade-in slide-in-from-top-4 duration-300 pointer-events-none select-none text-xs">
           {toastType === 'success' ? (
             <div className="p-1 rounded-full bg-emerald-500/20 text-emerald-400">
               <CheckCircle2 className="w-4 h-4" />
@@ -136,24 +136,28 @@ export default function App() {
         />
  
         {/* Dashboard Panels */}
-        <main className={`flex-1 px-4 lg:px-8 py-3.5 flex flex-col min-h-0 overflow-hidden w-full mx-auto gap-3.5 transition-all duration-300 ${
-          isSidebarCollapsed ? 'max-w-[1500px]' : 'max-w-6xl'
-        }`}>
+        <main className="flex-1 px-6 lg:px-8 py-3.5 flex flex-col min-h-0 overflow-hidden w-full gap-3.5">
           
           {/* Top Title */}
-          <div className="w-full flex items-center justify-between select-none pb-2 border-b border-slate-100/80 shrink-0">
-            <div className="flex items-center gap-3">
-              <h2 className="text-base font-bold text-slate-850 tracking-tight font-sans">
-                安维斯已进入智慧值守运行中
+          <div className="w-full flex flex-col md:flex-row md:items-center md:justify-between select-none pb-2 border-b border-slate-100/80 shrink-0 gap-2">
+            <div>
+              <h2 className="text-base font-bold text-slate-900 tracking-tight font-sans">
+                安维斯正在值守
               </h2>
-              <span className="text-[10px] bg-emerald-500 text-white font-extrabold px-1.5 py-0.5 rounded shadow-sm flex items-center gap-1">
-                <span className="w-1.5 h-1.5 bg-white rounded-full animate-clock animate-pulse" />
-                智能联动就绪
+              <p className="text-xs text-slate-400 font-medium font-sans mt-0.5">
+                自动检测现场风险，也支持你随时指派临时任务。
+              </p>
+            </div>
+            {/* Simple Enterprise Status */}
+            <div className="flex items-center gap-3 text-slate-400 text-xs">
+              <span className="flex items-center gap-1.5 text-xs text-slate-600 font-medium">
+                <span className="relative flex h-1.5 w-1.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
+                </span>
+                系统防线已启动
               </span>
             </div>
-            <p className="text-[11px] text-slate-400 font-medium font-sans">
-              实时哨所：已激活 128 路 AI 前端 ｜ 深度对齐国家特高不安全规范 GB30871
-            </p>
           </div>
  
           {/* Module 2: 安维斯智能双栏值守工作区 (左栏任务, 右栏对话) */}

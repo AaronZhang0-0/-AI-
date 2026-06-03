@@ -131,7 +131,7 @@ export default function AiChatbotDrawer({
     <>
       {/* 2. Side Dialog Drawer Panel */}
       {isOpen && (
-        <div className="fixed inset-y-0 right-0 w-96 bg-white shadow-2xl z-50 flex flex-col justify-between border-l border-slate-105 animate-in slide-in-from-right duration-250 select-none">
+        <div className="fixed inset-y-0 right-0 w-96 bg-white shadow-2xl z-50 flex flex-col justify-between border-l border-slate-100 animate-in slide-in-from-right duration-250 select-none">
           
           {/* Header */}
           <div className="p-4 bg-gradient-to-r from-blue-900 to-indigo-950 text-white flex items-center justify-between shadow">
@@ -173,7 +173,7 @@ export default function AiChatbotDrawer({
                 <button
                   key={idx}
                   onClick={() => handleSendMessage(q)}
-                  className="px-2.5 py-1.5 rounded-lg bg-white hover:bg-blue-50 border border-slate-150 hover:border-blue-300 text-[10.5px] text-slate-600 hover:text-blue-600 transition-all font-sans cursor-pointer text-left whitespace-nowrap"
+                  className="px-2.5 py-1.5 rounded-lg bg-white hover:bg-blue-50 border border-slate-200/60 hover:border-blue-300 text-[10.5px] text-slate-600 hover:text-blue-600 transition-all font-sans cursor-pointer text-left whitespace-nowrap"
                 >
                   {q}
                 </button>
@@ -195,15 +195,15 @@ export default function AiChatbotDrawer({
                 >
                   {/* Bot mini icon */}
                   {isAi && (
-                    <div className="w-7 h-7 rounded-full bg-slate-900 border border-slate-750 flex items-center justify-center shrink-0 text-cyan-300">
+                    <div className="w-7 h-7 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center shrink-0 text-cyan-300">
                       <Cpu className="w-4.5 h-4.5" />
                     </div>
                   )}
 
                   {/* Message Bubble box */}
-                  <div className={`max-w-[80%] rounded-2xl p-3.5 text-[11.5px] leading-relaxed shadow-sm ${
+                  <div className={`max-w-[80%] rounded-2xl p-3.5 text-[11.5px] leading-relaxed shadow-xs ${
                     isAi 
-                      ? 'bg-white border border-slate-150 text-slate-800 rounded-tl-none font-sans' 
+                      ? 'bg-white border border-slate-100 text-slate-800 rounded-tl-none font-sans' 
                       : 'bg-blue-600 text-white rounded-tr-none font-sans'
                   }`}>
                     {/* Render message with bold line matching support */}
@@ -228,10 +228,10 @@ export default function AiChatbotDrawer({
             {/* Simulated writing wait bar */}
             {isTyping && (
               <div className="flex gap-2.5 justify-start">
-                <div className="w-7 h-7 rounded-full bg-slate-900 border border-slate-755 flex items-center justify-center text-cyan-300">
+                <div className="w-7 h-7 rounded-full bg-slate-900 border border-slate-800 flex items-center justify-center text-cyan-300">
                   <Cpu className="w-4.5 h-4.5 animate-spin" />
                 </div>
-                <div className="bg-white border border-slate-150 rounded-2xl rounded-tl-none p-3.5 flex items-center gap-1">
+                <div className="bg-white border border-slate-100 rounded-2xl rounded-tl-none p-3.5 flex items-center gap-1">
                   <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0s' }} />
                   <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0.15s' }} />
                   <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0.3s' }} />
